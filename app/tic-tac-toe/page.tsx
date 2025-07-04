@@ -1,83 +1,122 @@
+"use client";
+
 import clsx from "clsx";
-import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
-import { Divider } from "@heroui/divider";
+import { useState } from "react";
+import type { SquareProps } from "@/types";
+import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { Link } from "@heroui/link";
 import { title } from "@/components/primitives";
 import { Button } from "@heroui/button";
 
-export default function AboutPage() {
+export default function TicTacToePageHome() {
   return (
     <div>
-      <h1 className={clsx(title(), "underline")}>TIC TAC TOE</h1>
-      <Card className="max-w-[400px] mt-10">
-        <CardHeader className="flex gap-3">
-          <Image
-            alt="heroui logo"
-            height={40}
-            radius="sm"
-            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-            width={40}
-          />
-          <div className="flex flex-col">
-            <p className="text-md">HeroUI</p>
-            <p className="text-small text-default-500">heroui.com</p>
-          </div>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          <p>Make beautiful websites regardless of your design experience.</p>
-        </CardBody>
-        <Divider />
-        <CardFooter>
-          <Link
-            isExternal
-            showAnchorIcon
-            href="https://github.com/heroui-inc/heroui"
-          >
-            Visit source code on GitHub.
-          </Link>
-        </CardFooter>
-      </Card>
+      <h1 className={clsx(title({ size: "md" }), "text-primary-800")}>
+        Tic Tac Toe
+      </h1>
 
-      <Card className="py-4 mt-10">
+      <Card className="py-4 mt-10 w-[500px]">
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <p className="text-tiny uppercase font-bold">Daily Mix</p>
-          <small className="text-default-500">12 Tracks</small>
-          <h4 className="font-bold text-large">Frontend Radio</h4>
+          <p className="text-tiny uppercase font-bold">Turno actual</p>
+          <h4 className="font-bold text-large">X</h4>
         </CardHeader>
         <CardBody className="overflow-visible py-2">
-          <Image
-            alt="Card background"
-            className="object-cover rounded-xl"
-            src="https://heroui.com/images/hero-card-complete.jpeg"
-            width={270}
-          />
+          <Board />
         </CardBody>
       </Card>
-
-      <Card isFooterBlurred className="border-none mt-10" radius="lg">
-        <Image
-          alt="Woman listing to music"
-          className="object-cover"
-          height={200}
-          src="https://heroui.com/images/hero-card.jpeg"
-          width={200}
-        />
-        <CardFooter className="justify-between before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-          <p className="text-tiny text-white/80">Available soon.</p>
-          <Button
-            className="text-tiny text-white bg-black/20"
-            color="default"
-            radius="lg"
-            size="sm"
-            variant="flat"
-          >
-            Notify me
-          </Button>
-        </CardFooter>
-      </Card>
-
     </div>
   );
+}
+
+// export function Square({ value }: SquareProps) {
+//   return <button className="square">{value}</button>;
+// }
+
+export const Square = ({ value, onSquareClick }: SquareProps) => {
+  return (
+    <button className="square" type="button" onClick={onSquareClick}>
+      {value}
+    </button>
+  );
+};
+
+export function Board() {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [turn, setTurn] = useState<"X" | "O">("X");
+
+  const winner = calculateWinner(squares);
+  let status;
+
+  if (winner) {
+    status = "Ganador: " + winner;
+  } else {
+    status = "Siguiente jugador: " + (turn === "X" ? "O" : "X");
+  }
+
+  function handleClick(i: number) {
+    if (squares[i] !== null || calculateWinner(squares)) return;
+
+    //Creamos una copia de la matriz actual
+    const nextSquares = [...squares];
+    // const nextSquares = squares.slice();
+
+    //Asignamos el valor segun el turno
+    if (turn === "X") {
+      nextSquares[i] = "X";
+    } else {
+      nextSquares[i] = "O";
+    }
+
+    //Cambiamos el turno
+    setTurn(turn === "X" ? "O" : "X");
+
+    //Almacenamos es cambio(estado) en la matriz
+    setSquares(nextSquares);
+
+    console.info("Nueva matriz después de asignar el valor de X:", nextSquares);
+    console.info("Matriz original:", squares);
+  }
+
+  return (
+    <>
+      <div className="status">{status}</div>
+      <div className="flex flex-row">
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+      </div>
+      <div className="flex flex-row">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+      </div>
+      <div className="flex flex-row">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      </div>
+    </>
+  );
+}
+
+function calculateWinner(squares: number[]) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 }

@@ -1,4 +1,5 @@
 import { title, subtitle } from "@/components/primitives";
+import MyListBox from "@/components/home/MyListBox";
 
 export default function Home() {
   return (
@@ -11,8 +12,9 @@ export default function Home() {
         <br />
         <span className={title({ size: "sm" })}>Desarrollado con amor</span>
         <div className={subtitle({ class: "mt-4" })}>
-          link de documentaciones
+          <h1 className="text-2xl font-bold">Links de documentación</h1>
           <br />
+          <MyListBox />
         </div>
       </div>
     </section>

@@ -33,11 +33,30 @@ export const siteConfig = {
       color: "danger",
     },
   ],
-  links: {
-    github: "https://github.com/heroui-inc/heroui",
-    twitter: "https://twitter.com/hero_ui",
-    docs: "https://heroui.com",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
-  },
+  links: [
+    {
+      label: "HeroUI",
+      href: "https://www.heroui.com/docs/",
+      icon: "HeroUI",
+      isExternal: true,
+    },
+    {
+      label: "Tailwind CSS",
+      href: "https://tailwindcss.com/docs/",
+      icon: "Tailwind",
+      isExternal: true,
+    },
+    {
+      label: "Tailwind Cheat Sheet",
+      href: "https://nerdcave.com/tailwind-cheat-sheet",
+      icon: "Tailwind",
+      isExternal: true,
+    },
+    {
+      label: "React doc",
+      href: "https://react.dev/reference/react",
+      icon: "React",
+      isExternal: true,
+    },
+  ],
 };
